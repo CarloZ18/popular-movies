@@ -1,90 +1,87 @@
 import YouTube from "react-youtube";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import useMovies from "./hooks/useMovies";
+import { NavLink } from "react-router-dom";
 
-const OverviewMovies = ({ poster, title, overview }) => {
+const OverviewMovies = ({playTrailer,returnHome}) => {
+
+  const {
+    recommendations,
+    textRecommendations,
+    overview,
+    titleOverview,
+    posterOverview,
+    watchTrailer,
+    trailer,
+    returnText,
+    playing
+  } = useMovies();
+
+
   return (
     <>
+      <NavLink to="/">
+        <div className="return" onClick={returnHome}>
+          <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+          <h3 className="text-return">{returnText}</h3>
+        </div>
+      </NavLink>
+
       <div className="top">
         <div className="columns">
           <div className="featured_wrapper">
             <div>
               <img
                 alt=""
-                src={`https://image.tmdb.org/t/p/w500/${poster}`}
+                src={`https://image.tmdb.org/t/p/w500/${posterOverview}`}
                 className="featured"
               />
             </div>
+
             <div className="title_wrapper">
-              <h1 className="title-overview">{title}</h1>
+              <h1 className="title-overview">{titleOverview}</h1>
               <p className="sinopsis">{overview}</p>
-              <button className="button-overview">Watch Trailer</button>
+
+              {trailer !== undefined ? (
+                <button
+                  className="button-overview"
+                  onClick={() => playTrailer()}
+                >
+                  {watchTrailer}
+                </button>
+              ) : null}
+
+              {playing ? (
+                <YouTube
+                  videoId={trailer.key}
+                  opts={{
+                    width: "100%",
+                    height: "380px",
+                    playerVars: {
+                      autoplay: 1,
+                      controls: 1,
+                      cc_load_policy: 0,
+                      fs: 1,
+                      iv_load_policy: 0,
+                      modestbranding: 0,
+                      rel: 0,
+                    },
+                  }}
+                />
+              ) : null}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container-overview">
-        <p className="recommendations-text">Recommendations</p>
-        <div className="first-row">
-          <div className="column is-one-quarter">
-            <img
-              alt=""
-              className="img-overview"
-              src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/image1.PNG"
-            />
-          </div>
-          <div className="column is-one-quarter">
-            <img
-              alt=""
-              className="img-overview"
-              src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/image2.PNG"
-            />
-          </div>
-          <div className="column is-one-quarter">
-            <img
-              alt=""
-              className="img-overview"
-              src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/img3.PNG"
-            />
-          </div>
-          <div className="column is-one-quarter">
-            <img
-              alt=""
-              className="img-overview"
-              src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/img4.PNG"
-            />
-          </div>
+      {recommendations.length !== 0 ? (
+        <div className="container-overview">
+          <p className="recommendations-text">{textRecommendations}</p>
+
+          <div className="first-row">{recommendations}</div>
         </div>
-        <div className="second-row">
-          <div className="column is-one-quarter">
-            <img
-              alt=""
-              className="img-overview"
-              src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/img5.PNG"
-            />
-          </div>
-          <div className="column is-one-quarter">
-            <img
-              alt=""
-              className="img-overview"
-              src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/img6.PNG"
-            />
-          </div>
-          <div className="column is-one-quarter">
-            <img
-              alt=""
-              className="img-overview"
-              src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/img7.PNG"
-            />
-          </div>
-          <div className="column is-one-quarter">
-            <img
-              alt=""
-              className="img-overview"
-              src="https://raw.githubusercontent.com/brixiobodino/coffeholic/main/img8.PNG"
-            />
-          </div>
-        </div>
-      </div>
+      ) : null}
     </>
   );
 };

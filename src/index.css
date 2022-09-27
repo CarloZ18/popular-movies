@@ -286,6 +286,7 @@ input {
   position: absolute;
   height: 250px;
   width: 200px;
+  font-size: 1em;
   z-index: 2;
   color: white;
   opacity: 0;
@@ -464,9 +465,28 @@ h2 {
 
 /*                                  CCS OVERVIEW                                 */
 
+a:-webkit-any-link {
+  text-decoration: none;
+}
+
+.return{
+  display: flex;
+  justify-content:flex-start;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.text-return{
+  margin-left: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .container-overview {
   padding: 3em;
-  height: 800px;
+  height: 600px;
 }
 
 .recommendations-text {
@@ -482,21 +502,6 @@ h2 {
   gap: 30px;
 }
 
-.second-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
-  margin-top: 150px;
-}
-
-.img-overview {
-  width: 300px;
-  -webkit-box-reflect: below 5px
-    linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.4));
-  -webkit-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
 .container-overview .img-overview:hover {
   -webkit-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -507,11 +512,8 @@ h2 {
 }
 .featured_wrapper {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-}
-
-.featured {
-  margin-top: 3px;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 40px;
 }
 
 .featured_wrapper .img-overview {
@@ -520,16 +522,16 @@ h2 {
 }
 .title_wrapper {
   width: 90%;
-  padding-top: 12vw;
 }
 .title_wrapper h1 {
   width: 70%;
-  margin: 30px 0px;
+  margin: 20px 0px;
   font-size: 50px;
 }
 .button-overview {
   height: 50px;
   width: 150px;
+  margin-bottom: 20px;
   border-radius: 10px;
   background-color: #24174485;
   border-color: var(--secondary-color);
@@ -547,8 +549,56 @@ h2 {
 }
 
 .sinopsis {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
+
+.card-recommendations {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  height: 500px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 5px;
+  overflow: hidden;
+}
+
+.card-recommendations:hover .poster {
+  transform: scale(1.1);
+  transition: all 1s;
+}
+
+.card-recommendations:before {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 350px;
+  border-radius: 13px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000);
+  z-index: 1;
+  transition: 0.5s;
+  opacity: 0;
+}
+
+.card-recommendations:hover:before {
+  opacity: 1;
+}
+
+.card-recommendations .more-info{
+  height: 75px;
+  width: 125px;
+}
+
+
+.card-recommendations:hover .info {
+  opacity: 1;
+  transform: translateY(-100px);
+}
+
 
 @media (max-width: 768px) {
   .title_wrapper {
@@ -562,6 +612,48 @@ h2 {
   .container-overview {
     padding: 20px;
   }
+
+  .card:before {
+    content: "";
+    position: absolute;
+    width: 140px;
+    height: 250px;
+    border-radius: 13px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000);
+    z-index: 1;
+    transition: 0.5s;
+    opacity: 0;
+  }
+
+  .card {
+    height: 250px;
+  }
+
+.featured{
+  height: 500px;
+}
+
+.card-recommendations{
+  height: 250px;
+}
+
+.card-recommendations::before{
+  width: 138px;
+  height: 250px;
+}
+
+.card-recommendations:hover .info {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+.card-recommendations .more-info{
+  height: 50px;
+  width: 100px;
+}
+
+
+
 }
 @media (max-width: 480px) {
   .column.is-one-quarter img {

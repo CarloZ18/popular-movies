@@ -138,7 +138,7 @@ function App() {
       );
       if (recommendationsUrl.status === 200) {
         const data4 = await recommendationsUrl.json();
-        const renderData = data4.results.slice(0, 4);
+        const renderData = data4.results.slice(0, 12);
         const renderRecommendations = renderData.filter(
           (poster) => poster.poster_path !== null
         );

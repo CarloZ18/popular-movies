@@ -87,114 +87,7 @@ function App() {
     }
   };
 
-  const popularMovies = async () => {
-    try {
-      setLoading(true);
-      const moviesUrl = await fetch(
-        `https://api.themoviedb.org/3/movie/popular/?api_key=d5cf176c00d61b0b743c13c0e41cd146&page=${page}&language=${language}`
-      );
-
-      if (moviesUrl.status === 200 && filterMovie === "") {
-        const data = await moviesUrl.json();
-
-        const renderMovies = data.results.filter(
-          (poster) => poster.poster_path !== null
-        );
-        const moviePopular = renderMovies.map((movie) => (
-          <div className="movie" key={movie.id}>
-            <div className="card">
-              {movie.poster_path !== null ? (
-                <img
-                  className="poster"
-                  src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                  alt=""
-                />
-              ) : null}
-              <div className="info">
-                <Link to="/overview" preventScrollReset={true}>
-                  <button
-                    className="more-info"
-                    onClick={() =>
-                      getData(
-                        movie.id,
-                        movie.poster_path,
-                        movie.title,
-                        movie.overview
-                      )
-                    }
-                  >
-                    {moreInfo}
-                  </button>
-                </Link>
-                {window.screen.width >= 1024 ? (
-                  <h3 className="title">{movie.title}</h3>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        ));
-
-        setMovieName(moviePopular);
-      } else if (moviesUrl.status === 200 && filterMovie !== "") {
-        const search = filterMovie;
-        setLoading(true);
-        const searchUrl = await fetch(
-          `https://api.themoviedb.org/3/search/movie/?api_key=d5cf176c00d61b0b743c13c0e41cd146&page=${page}&language=${language}&query=${search}&include_adult=false`
-        );
-        if (searchUrl.status === 200) {
-          const data2 = await searchUrl.json();
-
-          const renderSearch = data2.results.filter(
-            (poster) => poster.poster_path !== null
-          );
-         
-          const searchPopularMovies = renderSearch.map((movie) => (
-            <div className="movie" key={movie.id}>
-              <div className="card">
-                <img
-                  className="poster"
-                  src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                  alt=""
-                />
-
-                <div className="info">
-                  <Link to="/overview">
-                    <button
-                      className="more-info"
-                      onClick={() =>
-                        getData(
-                          movie.id,
-                          movie.poster_path,
-                          movie.title,
-                          movie.overview
-                        )
-                      }
-                    >
-                      {moreInfo}
-                    </button>
-                  </Link>
-
-                  <h3 className="title">{movie.title}</h3>
-                </div>
-              </div>
-            </div>
-          ));
-          setMovieName(searchPopularMovies);
-        } else if (moviesUrl.status === 401) {
-          alert("Identificador incorrecto");
-        } else if (moviesUrl.status === 404) {
-          console.log("No se encuentra la pelicula");
-        } else {
-          alert("Hubo un error al obtener la pelicula");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+ 
   const changePage = (e) => {
     if (e.target.id === "previous" && page > 1) {
       $(".Popular-Movies").animate({ opacity: 0 }, 500, function () {
@@ -330,6 +223,114 @@ function App() {
   };
 
   useEffect(() => {
+    const popularMovies = async () => {
+      try {
+        setLoading(true);
+        const moviesUrl = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=d5cf176c00d61b0b743c13c0e41cd146&page=${page}&language=${language}`
+        );
+  
+        if (moviesUrl.status === 200 && filterMovie === "") {
+          const data = await moviesUrl.json();
+  
+          const renderMovies = data.results.filter(
+            (poster) => poster.poster_path !== null
+          );
+          const moviePopular = renderMovies.map((movie) => (
+            <div className="movie" key={movie.id}>
+              <div className="card">
+                {movie.poster_path !== null ? (
+                  <img
+                    className="poster"
+                    src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                    alt=""
+                  />
+                ) : null}
+                <div className="info">
+                  <Link to="/overview" preventScrollReset={true}>
+                    <button
+                      className="more-info"
+                      onClick={() =>
+                        getData(
+                          movie.id,
+                          movie.poster_path,
+                          movie.title,
+                          movie.overview
+                        )
+                      }
+                    >
+                      {moreInfo}
+                    </button>
+                  </Link>
+                  {window.screen.width >= 1024 ? (
+                    <h3 className="title">{movie.title}</h3>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          ));
+  
+          setMovieName(moviePopular);
+        } else if (moviesUrl.status === 200 && filterMovie !== "") {
+          const search = filterMovie;
+          setLoading(true);
+          const searchUrl = await fetch(
+            `https://api.themoviedb.org/3/search/movie?api_key=d5cf176c00d61b0b743c13c0e41cd146&page=${page}&language=${language}&query=${search}&include_adult=false`
+          );
+          if (searchUrl.status === 200) {
+            const data2 = await searchUrl.json();
+  
+            const renderSearch = data2.results.filter(
+              (poster) => poster.poster_path !== null
+            );
+           
+            const searchPopularMovies = renderSearch.map((movie) => (
+              <div className="movie" key={movie.id}>
+                <div className="card">
+                  <img
+                    className="poster"
+                    src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                    alt=""
+                  />
+  
+                  <div className="info">
+                    <Link to="/overview">
+                      <button
+                        className="more-info"
+                        onClick={() =>
+                          getData(
+                            movie.id,
+                            movie.poster_path,
+                            movie.title,
+                            movie.overview
+                          )
+                        }
+                      >
+                        {moreInfo}
+                      </button>
+                    </Link>
+  
+                    <h3 className="title">{movie.title}</h3>
+                  </div>
+                </div>
+              </div>
+            ));
+            setMovieName(searchPopularMovies);
+          } else if (moviesUrl.status === 401) {
+            alert("Identificador incorrecto");
+          } else if (moviesUrl.status === 404) {
+            console.log("No se encuentra la pelicula");
+          } else {
+            alert("Hubo un error al obtener la pelicula");
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
     if (lang === "es-ES") {
       setLanguage("es-ES");
       setTitleSearch("Busca tu película");
@@ -364,7 +365,6 @@ function App() {
             path="/overview"
             element={
               <OverviewMovies
-                changeLanguage={changeLanguage}
                 playTrailer={playTrailer}
                 returnHome={returnHome}
               />

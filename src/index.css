@@ -169,14 +169,6 @@ code {
 
 /*SEARCH MOVIE*/
 
-.searchMovies {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 25px;
-}
-
 .form {
   display: flex;
   justify-content: center;
@@ -226,13 +218,14 @@ input {
   margin: 40px auto 100px auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
+  gap: 5vw;
 }
 
 .movie {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
@@ -241,7 +234,7 @@ input {
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  width: 100%;
+  width: 110%;
   height: 358px;
   margin-bottom: 10px;
   border-radius: 15px;
@@ -259,7 +252,7 @@ input {
 .card:before {
   content: "";
   position: absolute;
-  width: 210px;
+  width: 205px;
   height: 349px;
   border-radius: 13px;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000);
@@ -469,16 +462,16 @@ a:-webkit-any-link {
   text-decoration: none;
 }
 
-.return{
+.return {
   display: flex;
-  justify-content:flex-start;
+  justify-content: flex-start;
   align-items: center;
   padding: 15px 20px;
   background-color: var(--primary-color);
   color: #fff;
 }
 
-.text-return{
+.text-return {
   margin-left: 15px;
   font-weight: 600;
   text-decoration: none;
@@ -493,7 +486,7 @@ a:-webkit-any-link {
   margin-bottom: 40px;
   font-family: "Montserrat", sans-serif;
   font-size: large;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .first-row {
@@ -511,8 +504,8 @@ a:-webkit-any-link {
   margin-top: 6.5rem;
 }
 .featured_wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
+  display: flex;
+  flex-direction: row;
   gap: 40px;
 }
 
@@ -588,17 +581,15 @@ a:-webkit-any-link {
   opacity: 1;
 }
 
-.card-recommendations .more-info{
+.card-recommendations .more-info {
   height: 75px;
   width: 125px;
 }
-
 
 .card-recommendations:hover .info {
   opacity: 1;
   transform: translateY(-100px);
 }
-
 
 @media (max-width: 768px) {
   .title_wrapper {
@@ -613,11 +604,20 @@ a:-webkit-any-link {
     padding: 20px;
   }
 
+  .info {
+    font-size: 1em;
+    height: 130px;
+    width: 200px;
+  }
+  .more-info {
+    width: 100px;
+    height: 50px;
+  }
   .card:before {
     content: "";
     position: absolute;
-    width: 140px;
-    height: 250px;
+    width: 110px;
+    height: 170px;
     border-radius: 13px;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000);
     z-index: 1;
@@ -626,38 +626,67 @@ a:-webkit-any-link {
   }
 
   .card {
-    height: 250px;
+    height: 200px;
+    width: 120px;
   }
 
-.featured{
-  height: 500px;
-}
+  .card:hover .info {
+    transform: translateY(-20px);
+  }
 
-.card-recommendations{
-  height: 250px;
-}
+  .container-movies {
+    grid-template-columns: repeat(2, 1fr);
+    width: 80%;
+    gap: 30px;
+  }
 
-.card-recommendations::before{
-  width: 138px;
-  height: 250px;
-}
+  .featured_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-.card-recommendations:hover .info {
-  opacity: 1;
-  transform: translateY(0px);
-}
+  .featured {
+    height: 300px;
+  }
 
-.card-recommendations .more-info{
-  height: 50px;
-  width: 100px;
-}
+  .container-overview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
+  .first-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+  }
 
+  .card-recommendations {
+    height: 200px;
+    width: 120px;
+  }
 
-}
-@media (max-width: 480px) {
-  .column.is-one-quarter img {
-    width: 100%;
-    margin-bottom: 7rem;
+  .card-recommendations::before {
+    width: 110px;
+    height: 200px;
+  }
+
+  .card-recommendations:hover .info {
+    opacity: 1;
+    transform: translateY(-20px);
+  }
+
+  .card-recommendations .more-info {
+    height: 50px;
+    width: 100px;
+  }
+
+  .row {
+    flex-direction: column;
+    margin-bottom: 50px;
+  }
+
+  .form {
+    width: 250px;
   }
 }

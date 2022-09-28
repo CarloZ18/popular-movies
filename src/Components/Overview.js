@@ -77,7 +77,7 @@ const OverviewMovies = ({playTrailer,returnHome}) => {
 
       {recommendations.length !== 0 ? (
         <div className="container-overview">
-          <p className="recommendations-text">{textRecommendations}</p>
+          <h3 className="recommendations-text">{textRecommendations}</h3>
 
           <div className="first-row">{recommendations}</div>
         </div>

@@ -2,15 +2,16 @@ import FilterMovie from "./FilterMovie";
 import Loader from "./Loader/Loader";
 import Movies from "./Movies";
 import Pagination from "./Pagination";
-import ChangeLanguage from "./ChangeLanguage";
 import useMovies from "./hooks/useMovies";
 
-const Home = ({ changePage, changeLanguage, handleChange }) => {
+const Home = ({ changePage, handleChange, changeLanguage }) => {
   const { loading } = useMovies();
   return (
     <div className="Popular-Movies">
-      <ChangeLanguage changeLanguage={changeLanguage} />
-      <FilterMovie handleChange={handleChange} />
+      <FilterMovie
+        handleChange={handleChange}
+        changeLanguage={changeLanguage}
+      />
       {loading ? <Loader /> : <Movies />}
       <Pagination changePage={changePage} />
     </div>

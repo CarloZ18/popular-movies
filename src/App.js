@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Home from "./Components/Home";
 import MoviesContext from "./Components/context/MoviesContext";
 import OverviewMovies from "./Components/Overview";
-import ScrollToTop from "./Components/ScrollToTop";
+
 
 function App() {
   /*MOVIES*/
@@ -195,6 +195,7 @@ function App() {
       getTrailer(id);
       getRecommendations(id);
     }
+    window.scrollTo(0, 0);
   };
 
   const playTrailer = () => {
@@ -359,7 +360,6 @@ function App() {
   return (
     <MoviesContext.Provider value={store}>
       <Router>
-        <ScrollToTop />
         <Routes>
           <Route
             path="/overview"

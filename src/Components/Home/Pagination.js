@@ -1,4 +1,4 @@
-import useMovies from "./hooks/useMovies";
+import useMovies from "./Movies";
 
 const Pagination = ({changePage}) => {
 

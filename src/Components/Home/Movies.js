@@ -1,4 +1,4 @@
-import useMovies from "./hooks/useMovies";
+import useMovies from "../hooks/useMovies";
 const Movies = () => {
 
   const {movieName, containerMovies} = useMovies();

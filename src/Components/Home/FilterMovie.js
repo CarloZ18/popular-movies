@@ -1,5 +1,5 @@
 import ChangeLanguage from "./ChangeLanguage";
-import useMovies from "./hooks/useMovies";
+import useMovies from "../hooks/useMovies";
 
 const FilterMovie = ({ handleChange, changeLanguage }) => {
   const { titleSearch } = useMovies();

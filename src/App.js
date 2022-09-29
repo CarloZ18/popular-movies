@@ -2,10 +2,9 @@ import { useEffect, useState, useRef } from "react";
 import "./index.css";
 import $ from "jquery";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Home from "./Components/Home";
+import Home from "./Components/Home/Home";
 import MoviesContext from "./Components/context/MoviesContext";
-import OverviewMovies from "./Components/Overview";
-
+import OverviewMovies from "./Components/Overview/Overview";
 
 function App() {
   /*MOVIES*/
@@ -87,7 +86,6 @@ function App() {
     }
   };
 
- 
   const changePage = (e) => {
     if (e.target.id === "previous" && page > 1) {
       $(".Popular-Movies").animate({ opacity: 0 }, 500, function () {
@@ -142,35 +140,33 @@ function App() {
         const renderRecommendations = renderData.filter(
           (poster) => poster.poster_path !== null
         );
-        const recommendationsMovies = renderRecommendations.map(
-          (movie) => (
-            <div className="card-recommendations" key={movie.id}>
-              <img
-                className="poster"
-                src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                alt=""
-              />
+        const recommendationsMovies = renderRecommendations.map((movie) => (
+          <div className="card-recommendations" key={movie.id}>
+            <img
+              className="poster"
+              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+              alt=""
+            />
 
-              <div className="info">
-                <Link to="/overview">
-                  <button
-                    className="more-info"
-                    onClick={() =>
-                      getData(
-                        movie.id,
-                        movie.poster_path,
-                        movie.title,
-                        movie.overview
-                      )
-                    }
-                  >
-                    {moreInfo}
-                  </button>
-                </Link>
-              </div>
+            <div className="info">
+              <Link to="/overview">
+                <button
+                  className="more-info"
+                  onClick={() =>
+                    getData(
+                      movie.id,
+                      movie.poster_path,
+                      movie.title,
+                      movie.overview
+                    )
+                  }
+                >
+                  {moreInfo}
+                </button>
+              </Link>
             </div>
-          )
-        );
+          </div>
+        ));
         setRecommendations(recommendationsMovies);
       } else if (recommendationsUrl.status === 401) {
         alert("Identificador incorrecto");
@@ -230,10 +226,10 @@ function App() {
         const moviesUrl = await fetch(
           `https://api.themoviedb.org/3/movie/popular?api_key=d5cf176c00d61b0b743c13c0e41cd146&page=${page}&language=${language}`
         );
-  
+
         if (moviesUrl.status === 200 && filterMovie === "") {
           const data = await moviesUrl.json();
-  
+
           const renderMovies = data.results.filter(
             (poster) => poster.poster_path !== null
           );
@@ -270,7 +266,7 @@ function App() {
               </div>
             </div>
           ));
-  
+
           setMovieName(moviePopular);
         } else if (moviesUrl.status === 200 && filterMovie !== "") {
           const search = filterMovie;
@@ -280,11 +276,11 @@ function App() {
           );
           if (searchUrl.status === 200) {
             const data2 = await searchUrl.json();
-  
+
             const renderSearch = data2.results.filter(
               (poster) => poster.poster_path !== null
             );
-           
+
             const searchPopularMovies = renderSearch.map((movie) => (
               <div className="movie" key={movie.id}>
                 <div className="card">
@@ -293,7 +289,7 @@ function App() {
                     src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     alt=""
                   />
-  
+
                   <div className="info">
                     <Link to="/overview">
                       <button
@@ -310,8 +306,10 @@ function App() {
                         {moreInfo}
                       </button>
                     </Link>
-  
-                    <h3 className="title">{movie.title}</h3>
+
+                    {window.screen.width >= 1024 ? (
+                      <h3 className="title">{movie.title}</h3>
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -331,7 +329,7 @@ function App() {
         setLoading(false);
       }
     };
-  
+
     if (lang === "es-ES") {
       setLanguage("es-ES");
       setTitleSearch("Busca tu película");

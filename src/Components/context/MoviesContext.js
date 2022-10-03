@@ -20,5 +20,6 @@ const MoviesContext = createContext({
   containerMovies:null,
   checkedLenguage:null,
   returnText:null,
+  
 });
 export default MoviesContext;

@@ -4,8 +4,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import useMovies from "../hooks/useMovies";
 import { NavLink } from "react-router-dom";
 
-const OverviewMovies = ({playTrailer,returnHome}) => {
-
+const OverviewMovies = ({returnHome,playTrailer}) => {
   const {
     recommendations,
     textRecommendations,
@@ -17,7 +16,6 @@ const OverviewMovies = ({playTrailer,returnHome}) => {
     returnText,
     playing
   } = useMovies();
-
 
   return (
     <>

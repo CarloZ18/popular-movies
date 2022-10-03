@@ -224,7 +224,7 @@ function App() {
       try {
         setLoading(true);
         const moviesUrl = await fetch(
-          `https://api.themoviedb.org/3/movie/popular?api_key=d5cf176c00d61b0b743c13c0e41cd146&page=${page}&language=${language}`
+          `https://api.themoviedb.org/3/movie/popular?api_key=d5cf176c00d61b0b743c13c0e41cd146&page=${page}&language=${language}&include_adult=false`
         );
 
         if (moviesUrl.status === 200 && filterMovie === "") {
@@ -269,6 +269,7 @@ function App() {
 
           setMovieName(moviePopular);
         } else if (moviesUrl.status === 200 && filterMovie !== "") {
+          setPlaying(false)
           const search = filterMovie;
           setLoading(true);
           const searchUrl = await fetch(
@@ -365,6 +366,7 @@ function App() {
               <OverviewMovies
                 playTrailer={playTrailer}
                 returnHome={returnHome}
+            
               />
             }
           ></Route>

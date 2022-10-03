@@ -1,4 +1,4 @@
-import useMovies from "./Movies";
+import useMovies from "../hooks/useMovies";
 
 const ChangeLanguage = ({changeLanguage}) => {
 

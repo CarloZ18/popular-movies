@@ -1,34 +1,50 @@
 import { useEffect, useState, useRef } from "react";
 import "./index.css";
 import $ from "jquery";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Link,
+  NavLink,
+} from "react-router-dom";
 import Home from "./Components/Home/Home";
 import MoviesContext from "./Components/context/MoviesContext";
-import OverviewMovies from "./Components/Overview/Overview";
+import Overview from "./Components/Overview/Overview";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import YouTube from "react-youtube";
 
 function App() {
   /*MOVIES*/
   const [movieName, setMovieName] = useState("");
-  const [recommendations, setRecommendations] = useState("");
   const [textRecommendations, setTextRecommendations] =
     useState("Recommendations");
   const [page, setPage] = useState(1);
-  const [language, setLanguage] = useState("en-US");
+  const [language, setLanguage] = useState(`${localStorage.getItem("lang")}`);
   const [titleSearch, setTitleSearch] = useState("Search your movie");
-  const [moreInfo, setMoreInfo] = useState("More info");
+  const [moreInfo, setMoreInfo] = useState(
+    language === "en-US" ? "More info" : "Saber más"
+  );
   const [next, setNext] = useState("Next");
   const [previous, setPrevious] = useState("Previous");
   const [checkedLanguage, setCheckedLanguage] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [posterOverview, setPosterOverview] = useState(null);
-  const [titleOverview, setTitleOverview] = useState(null);
-  const [overview, setOverview] = useState(null);
   const [filterMovie, setFilterMovie] = useState("");
-  const [watchTrailer, setWatchTrailer] = useState("Watch Trailer");
-  const [trailer, setTrailer] = useState(null);
+  const [watchTrailer, setWatchTrailer] = useState(
+    language === "en-US" ? "Watch Trailer" : "Ver Trailer"
+  );
   const [trailerText, setTrailerText] = useState("Hide Trailer");
-  const [returnText, setReturnText] = useState("Home");
+  const [returnText, setReturnText] = useState(
+    language === "en-US" ? "Home" : "Inicio"
+  );
   const [playing, setPlaying] = useState(false);
+  const [movieId, setMovieId] = useState(`${localStorage.getItem("ID")}`);
+  const [trailer, setTrailer] = useState(
+    `${localStorage.getItem("TrailerKey")}`
+  );
+  const [overviewDetails, setOverviewDetails] = useState("");
+  const [recommendations, setRecommendations] = useState("");
 
   const containerRef = useRef();
 
@@ -37,17 +53,11 @@ function App() {
   const store = {
     pageNum: page,
     movieName: movieName,
-    recommendations: recommendations,
     textRecommendations: textRecommendations,
     language: language,
     moreInfo: moreInfo,
     loading: loading,
-    posterOverview: posterOverview,
-    titleOverview: titleOverview,
-    overview: overview,
-    filterMovie: filterMovie,
     watchTrailer: watchTrailer,
-    trailer: trailer,
     next: next,
     previous: previous,
     titleSearch: titleSearch,
@@ -56,6 +66,10 @@ function App() {
     returnText: returnText,
     trailerText: trailerText,
     playing: playing,
+    movieId: movieId,
+    overviewDetails: overviewDetails,
+    recommendations: recommendations,
+    trailer: trailer,
   };
 
   const changeLanguage = () => {
@@ -100,98 +114,10 @@ function App() {
     }
   };
 
-  const getTrailer = async (id) => {
-    try {
-      setLoading(true);
-      const trailerUrl = await fetch(
-        `https://api.themoviedb.org/3/movie/${id}/videos?api_key=d5cf176c00d61b0b743c13c0e41cd146`
-      );
-      if (trailerUrl.status === 200) {
-        const data3 = await trailerUrl.json();
-        if (data3.results) {
-          const officialTrailer = data3.results.find(
-            (vid) => vid.name === "Official Trailer"
-          );
-          setTrailer(officialTrailer ? officialTrailer : data3.results[4]);
-        }
-      } else if (trailerUrl.status === 401) {
-        alert("Identificador incorrecto");
-      } else if (trailerUrl.status === 404) {
-        console.log("No se encuentra la pelicula");
-      } else {
-        alert("Hubo un error al obtener la pelicula");
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getRecommendations = async (id) => {
-    try {
-      setLoading(true);
-      const recommendationsUrl = await fetch(
-        `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=d5cf176c00d61b0b743c13c0e41cd146&language=${language}`
-      );
-      if (recommendationsUrl.status === 200) {
-        const data4 = await recommendationsUrl.json();
-        const renderData = data4.results.slice(0, 12);
-        const renderRecommendations = renderData.filter(
-          (poster) => poster.poster_path !== null
-        );
-        const recommendationsMovies = renderRecommendations.map((movie) => (
-          <div className="card-recommendations" key={movie.id}>
-            <img
-              className="poster"
-              src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-              alt=""
-            />
-
-            <div className="info">
-              <Link to="/overview">
-                <button
-                  className="more-info"
-                  onClick={() =>
-                    getData(
-                      movie.id,
-                      movie.poster_path,
-                      movie.title,
-                      movie.overview
-                    )
-                  }
-                >
-                  {moreInfo}
-                </button>
-              </Link>
-            </div>
-          </div>
-        ));
-        setRecommendations(recommendationsMovies);
-      } else if (recommendationsUrl.status === 401) {
-        alert("Identificador incorrecto");
-      } else if (recommendationsUrl.status === 404) {
-        console.log("No se encuentra la pelicula");
-      } else {
-        alert("Hubo un error al obtener la pelicula");
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getData = (id, poster, title, overview) => {
-    setPosterOverview(poster);
-    setTitleOverview(title);
-    setOverview(overview);
-    setFilterMovie(filterMovie);
-    if (id !== null) {
-      getTrailer(id);
-      getRecommendations(id);
-    }
+  const getData = (id) => {
+    setMovieId(id);
     window.scrollTo(0, 0);
+    localStorage.setItem("ID", `${id}`);
   };
 
   const playTrailer = () => {
@@ -220,6 +146,28 @@ function App() {
   };
 
   useEffect(() => {
+    if (lang === "es-ES") {
+      setLanguage("es-ES");
+      setTitleSearch("Busca tu película");
+      setMoreInfo("Saber más");
+      setNext("Siguiente");
+      setPrevious("Anterior");
+      setWatchTrailer("Ver Trailer");
+      setTextRecommendations("Recomendaciones");
+      setReturnText("Inicio");
+      setCheckedLanguage(true);
+    } else {
+      setLanguage("en-US");
+      setTitleSearch("Search your movie");
+      setMoreInfo("More info");
+      setNext("Next");
+      setPrevious("Previous");
+      setWatchTrailer("Watch Trailer");
+      setTextRecommendations("Recommendations");
+      setReturnText("Home");
+      setCheckedLanguage(false);
+    }
+
     const popularMovies = async () => {
       try {
         setLoading(true);
@@ -244,17 +192,10 @@ function App() {
                   />
                 ) : null}
                 <div className="info">
-                  <Link to="/overview" preventScrollReset={true}>
+                  <Link to={`/overview/${movie.id}`}>
                     <button
                       className="more-info"
-                      onClick={() =>
-                        getData(
-                          movie.id,
-                          movie.poster_path,
-                          movie.title,
-                          movie.overview
-                        )
-                      }
+                      onClick={() => getData(movie.id)}
                     >
                       {moreInfo}
                     </button>
@@ -269,7 +210,7 @@ function App() {
 
           setMovieName(moviePopular);
         } else if (moviesUrl.status === 200 && filterMovie !== "") {
-          setPlaying(false)
+          setPlaying(false);
           const search = filterMovie;
           setLoading(true);
           const searchUrl = await fetch(
@@ -292,17 +233,10 @@ function App() {
                   />
 
                   <div className="info">
-                    <Link to="/overview">
+                    <Link to={`/overview/${movie.id}`}>
                       <button
                         className="more-info"
-                        onClick={() =>
-                          getData(
-                            movie.id,
-                            movie.poster_path,
-                            movie.title,
-                            movie.overview
-                          )
-                        }
+                        onClick={() => getData(movie.id)}
                       >
                         {moreInfo}
                       </button>
@@ -331,47 +265,159 @@ function App() {
       }
     };
 
-    if (lang === "es-ES") {
-      setLanguage("es-ES");
-      setTitleSearch("Busca tu película");
-      setMoreInfo("Saber más");
-      setNext("Siguiente");
-      setPrevious("Anterior");
-      setWatchTrailer("Ver Trailer");
-      setTextRecommendations("Recomendaciones");
-      setReturnText("Inicio");
-      setCheckedLanguage(true);
-    } else {
-      setLanguage("en-US");
-      setTitleSearch("Search your movie");
-      setMoreInfo("More info");
-      setNext("Next");
-      setPrevious("Previous");
-      setWatchTrailer("Watch Trailer");
-      setTextRecommendations("Recommendations");
-      setReturnText("Home");
-      setCheckedLanguage(false);
-    }
-
     popularMovies();
   }, [page, language, filterMovie]);
+
+  useEffect(() => {
+    const overviewMovie = async (id) => {
+      try {
+        setLoading(true);
+        const overviewUrl = await fetch(
+          `https://api.themoviedb.org/3/movie/${
+            id !== undefined ? id : movieId
+          }?api_key=d5cf176c00d61b0b743c13c0e41cd146&language=${language}&append_to_response=videos,recommendations`
+        );
+
+        if (overviewUrl.status === 200) {
+          const dataOverview = await overviewUrl.json();
+
+          const renderData = dataOverview.recommendations.results.slice(0, 12);
+          const renderRecommendations = renderData.filter(
+            (poster) => poster.poster_path !== null
+          );
+          setRecommendations(
+            renderRecommendations.map((movie) => (
+              <div className="card-recommendations" key={movie.id}>
+                <img
+                  className="poster"
+                  src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                  alt=""
+                />
+
+                <div className="info">
+                  <Link to={`/overview/${movie.id}`}>
+                    <button
+                      className="more-info"
+                      onClick={() => getData(movie.id)}
+                    >
+                      {moreInfo}
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            ))
+          );
+
+          if (dataOverview.videos.results.length !== 0) {
+            const officialTrailer = dataOverview.videos.results.find(
+              (vid) => vid.name === "Official Trailer"
+            );
+            setTrailer(
+              officialTrailer
+                ? officialTrailer.key
+                : dataOverview.videos.results[
+                    dataOverview.videos.results.length - 1
+                  ].key
+            );
+
+            localStorage.setItem(
+              "TrailerKey",
+              `${
+                officialTrailer
+                  ? officialTrailer.key
+                  : dataOverview.videos.results[
+                      dataOverview.videos.results.length - 1
+                    ].key
+              }`
+            );
+          } else {
+            setTrailer(undefined);
+          }
+
+          setOverviewDetails(
+            <>
+              <NavLink to="/">
+                <div className="return" onClick={returnHome}>
+                  <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
+                  <h3 className="text-return">{returnText}</h3>
+                </div>
+              </NavLink>
+
+              <div className="top">
+                <div className="columns">
+                  <div className="featured_wrapper">
+                    <div>
+                      <img
+                        alt=""
+                        src={`https://image.tmdb.org/t/p/w500/${dataOverview.poster_path}`}
+                        className="featured"
+                      />
+                    </div>
+
+                    <div className="title_wrapper">
+                      <h1 className="title-overview">{dataOverview.title}</h1>
+                      <p className="sinopsis">{dataOverview.overview}</p>
+
+                      {trailer !== undefined ? (
+                        <button
+                          className="button-overview"
+                          onClick={() => playTrailer()}
+                        >
+                          {watchTrailer}
+                        </button>
+                      ) : null}
+
+                      {playing ? (
+                        <YouTube
+                          videoId={trailer}
+                          opts={{
+                            width: "100%",
+                            height: "380px",
+                            playerVars: {
+                              autoplay: 1,
+                              controls: 1,
+                              cc_load_policy: 0,
+                              fs: 1,
+                              iv_load_policy: 0,
+                              modestbranding: 0,
+                              rel: 0,
+                            },
+                          }}
+                        />
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          );
+        } else if (overviewUrl.status === 401) {
+          alert("Identificador incorrecto");
+        } else if (overviewUrl.status === 404) {
+          console.log("No se encuentra la pelicula");
+        } else {
+          alert("Hubo un error al obtener la pelicula");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    overviewMovie();
+  }, [movieId, playing, trailer, language]);
 
   return (
     <MoviesContext.Provider value={store}>
       <Router>
         <Routes>
           <Route
-            path="/overview"
-            element={
-              <OverviewMovies
-                playTrailer={playTrailer}
-                returnHome={returnHome}
-            
-              />
-            }
+            path={`/overview/${movieId}`}
+            element={<Overview />}
           ></Route>
           <Route
             path="/"
+            exact
             element={
               <Home
                 handleChange={handleChange}

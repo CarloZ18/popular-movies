@@ -133,6 +133,9 @@ function App() {
 
   const handleChange = (event) => {
     setFilterMovie(event.target.value);
+    if(page !== 1){
+      setPage(1)
+    }
   };
 
   useEffect(() => {

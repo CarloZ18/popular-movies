@@ -30,7 +30,7 @@ code {
   box-sizing: border-box;
 }
 
-.Popular-Movies {
+.display-movies {
   width: 100%;
   height: 100%;
   display: flex;

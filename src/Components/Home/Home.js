@@ -7,7 +7,7 @@ import useMovies from "../hooks/useMovies";
 const Home = ({ changePage, handleChange, changeLanguage }) => {
   const { loading } = useMovies();
   return (
-    <div className="Popular-Movies">
+    <div className="display-movies">
       <FilterMovie
         handleChange={handleChange}
         changeLanguage={changeLanguage}

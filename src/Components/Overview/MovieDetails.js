@@ -1,8 +1,8 @@
 
 import useMovies from "../hooks/useMovies";
 
-const MovieDetails = ( ) => {
-    const {overviewDetails, recommendations, textRecommendations } =
+const MovieDetails = ({overviewDetails,recommendations}) => {
+    const {textRecommendations } =
     useMovies();
 
   return (

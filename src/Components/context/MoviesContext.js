@@ -8,7 +8,6 @@ const MoviesContext = createContext({
   moreInfo:null,
   loading:null,
   filterMovie:null,
-  watchTrailer:null,
   next: "Next",
   previous: "Previous",
   titleSearch:null,
@@ -16,7 +15,6 @@ const MoviesContext = createContext({
   checkedLenguage:null,
   returnText:null,
   movieId:null,
-  playing:null
   
 });
 export default MoviesContext;

@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
 import Loader from "../Loader/Loader";
 import MovieDetails from "./MovieDetails";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import YouTube from "react-youtube";
 
-const Overview = ({ getData, playTrailer, returnHome }) => {
+const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
   const {
     loading,
     movieId,
-    returnText,
     language,
     moreInfo,
     playing,
@@ -24,6 +21,20 @@ const Overview = ({ getData, playTrailer, returnHome }) => {
   const [recommendations, setRecommendations] = useState("");
 
   const { id } = useParams();
+
+  const playTrailer = () => {
+    if (playing === false) {
+      setPlaying(true);
+      language === "es-ES"
+        ? setWatchTrailer("Ocultar Trailer")
+        : setWatchTrailer("Hide Trailer");
+    } else {
+      setPlaying(false);
+      language === "es-ES"
+        ? setWatchTrailer("Ver Trailer")
+        : setWatchTrailer("Watch Trailer");
+    }
+  };
 
   useEffect(() => {
     const overviewMovie = async () => {
@@ -92,12 +103,6 @@ const Overview = ({ getData, playTrailer, returnHome }) => {
 
           setOverviewDetails(
             <>
-              <NavLink to="/">
-                <div className="return" onClick={returnHome}>
-                  <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
-                  <h3 className="text-return">{returnText}</h3>
-                </div>
-              </NavLink>
 
               <div className="top">
                 <div className="columns">

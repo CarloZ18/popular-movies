@@ -5,6 +5,7 @@ import Loader from "../Loader/Loader";
 import MovieDetails from "./MovieDetails";
 import YouTube from "react-youtube";
 
+
 const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
   const {
     loading,
@@ -42,7 +43,7 @@ const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
         const overviewUrl = await fetch(
           `https://api.themoviedb.org/3/movie/${
             id !== undefined ? id : movieId
-          }?api_key=d5cf176c00d61b0b743c13c0e41cd146&language=${language}&append_to_response=videos,recommendations`
+          }?api_key=${process.env.REACT_APP_API_KEY}&language=${language}&append_to_response=videos,recommendations`
         );
 
         if (overviewUrl.status === 200) {

@@ -1,7 +1,7 @@
 import ChangeLanguage from "./ChangeLanguage";
 import useMovies from "../hooks/useMovies";
 
-const FilterMovie = ({ handleChange, changeLanguage }) => {
+const FilterMovie = ({ searchMovie, changeLanguage }) => {
   const { titleSearch } = useMovies();
 
   return (
@@ -14,7 +14,7 @@ const FilterMovie = ({ handleChange, changeLanguage }) => {
         <div className="form">
           <input
             className="inputSearch"
-            onChange={handleChange}
+            onChange={searchMovie}
             placeholder={titleSearch}
           />
         </div>

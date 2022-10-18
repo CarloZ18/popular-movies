@@ -12,7 +12,7 @@ import MoviesContext from "./Components/context/MoviesContext";
 import Overview from "./Components/Overview/Overview";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { API_KEY } from "./API/key";
+
 
 function App() {
   /*MOVIES*/
@@ -122,7 +122,7 @@ function App() {
     }
   };
 
-  const handleChange = (event) => {
+  const searchMovie = (event) => {
     setFilterMovie(event.target.value);
     if (page !== 1) {
       setPage(1);
@@ -158,7 +158,7 @@ function App() {
       try {
         setLoading(true);
         const moviesUrl = await fetch(
-          `https://api.themoviedb.org/3/movie/popular?${API_KEY}&page=${page}&language=${language}&include_adult=false`
+          `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_API_KEY}&page=${page}&language=${language}&include_adult=false`
         );
   
         if (moviesUrl.status === 200 && filterMovie === "") {
@@ -199,7 +199,7 @@ function App() {
           const search = filterMovie;
           setLoading(true);
           const searchUrl = await fetch(
-            `https://api.themoviedb.org/3/search/movie?${API_KEY}&page=${page}&language=${language}&query=${search}&include_adult=false`
+            `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_API_KEY}&page=${page}&language=${language}&query=${search}&include_adult=false`
           );
           if (searchUrl.status === 200) {
             const data2 = await searchUrl.json();
@@ -277,7 +277,7 @@ function App() {
             exact
             element={
               <Home
-                handleChange={handleChange}
+                searchMovie={searchMovie}
                 changeLanguage={changeLanguage}
                 changePage={changePage}
               />

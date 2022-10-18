@@ -4,12 +4,12 @@ import Movies from "./Movies";
 import Pagination from "./Pagination";
 import useMovies from "../hooks/useMovies";
 
-const Home = ({ changePage, handleChange, changeLanguage }) => {
+const Home = ({ changePage, searchMovie, changeLanguage }) => {
   const { loading } = useMovies();
   return (
     <div className="display-movies">
       <FilterMovie
-        handleChange={handleChange}
+        searchMovie={searchMovie}
         changeLanguage={changeLanguage}
       />
       {loading ? <Loader /> : <Movies />}

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import "./index.css";
 import {
   BrowserRouter as Router,
@@ -12,7 +12,15 @@ import MoviesContext from "./Components/context/MoviesContext";
 import Overview from "./Components/Overview/Overview";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-
+import {
+  Movie,
+  MoviePoster,
+  MovieInfo,
+  MovieCard,
+  MoreInfo,
+  Return,
+  TextReturn
+} from "./Components/Home/UI/style";
 
 function App() {
   /*MOVIES*/
@@ -40,8 +48,6 @@ function App() {
   const [playing, setPlaying] = useState(false);
   const [movieId, setMovieId] = useState(`${localStorage.getItem("ID")}`);
 
-  const containerRef = useRef();
-
   const lang = localStorage.getItem("lang");
 
   const store = {
@@ -55,7 +61,6 @@ function App() {
     next: next,
     previous: previous,
     titleSearch: titleSearch,
-    containerMovies: containerRef,
     checkedLanguage: checkedLanguage,
     returnText: returnText,
     trailerText: trailerText,
@@ -111,7 +116,7 @@ function App() {
 
   const returnHome = () => {
     setPlaying(false);
-    setFilterMovie("")
+    setFilterMovie("");
     setMovieId("");
     setPage(1);
     language === "es-ES"
@@ -128,8 +133,6 @@ function App() {
       setPage(1);
     }
   };
-
-  
 
   useEffect(() => {
     if (lang === "es-ES") {
@@ -160,40 +163,37 @@ function App() {
         const moviesUrl = await fetch(
           `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_API_KEY}&page=${page}&language=${language}&include_adult=false`
         );
-  
+
         if (moviesUrl.status === 200 && filterMovie === "") {
           const data = await moviesUrl.json();
-  
+
           const renderMovies = data.results.filter(
             (poster) => poster.poster_path !== null
           );
+
           const moviePopular = renderMovies.map((movie) => (
-            <div className="movie" key={movie.id}>
-              <div className="card">
+            <Movie key={movie.id}>
+              <MovieCard>
                 {movie.poster_path !== null ? (
-                  <img
-                    className="poster"
+                  <MoviePoster
                     src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     alt=""
                   />
                 ) : null}
-                <div className="info">
+                <MovieInfo>
                   <Link to={`/overview/${movie.id}`}>
-                    <button
-                      className="more-info"
-                      onClick={() => getData(movie.id)}
-                    >
+                    <MoreInfo onClick={() => getData(movie.id)}>
                       {moreInfo}
-                    </button>
+                    </MoreInfo>
                   </Link>
                   {window.screen.width >= 1024 ? (
                     <h3 className="title">{movie.title}</h3>
                   ) : null}
-                </div>
-              </div>
-            </div>
+                </MovieInfo>
+              </MovieCard>
+            </Movie>
           ));
-  
+
           setMovieName(moviePopular);
         } else if (moviesUrl.status === 200 && filterMovie !== "") {
           const search = filterMovie;
@@ -207,32 +207,32 @@ function App() {
             const renderSearch = data2.results.filter(
               (poster) => poster.poster_path !== null
             );
-  
+
             const searchPopularMovies = renderSearch.map((movie) => (
-              <div className="movie" key={movie.id}>
-                <div className="card">
-                  <img
+              <Movie  key={movie.id}>
+                <MovieCard >
+                  <MoviePoster
                     className="poster"
                     src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     alt=""
                   />
-  
-                  <div className="info">
+
+                  <MovieInfo >
                     <Link to={`/overview/${movie.id}`}>
-                      <button
+                      <MoreInfo
                         className="more-info"
                         onClick={() => getData(movie.id)}
                       >
                         {moreInfo}
-                      </button>
+                      </MoreInfo>
                     </Link>
-  
+
                     {window.screen.width >= 1024 ? (
                       <h3 className="title">{movie.title}</h3>
                     ) : null}
-                  </div>
-                </div>
-              </div>
+                  </MovieInfo>
+                </MovieCard>
+              </Movie>
             ));
             setMovieName(searchPopularMovies);
           } else if (moviesUrl.status === 401) {
@@ -250,16 +250,16 @@ function App() {
       }
     };
     popularMovies();
-  }, [language,page,filterMovie]);
+  }, [language, page, filterMovie]);
 
   return (
     <MoviesContext.Provider value={store}>
       <Router>
         <NavLink to="/">
-          <div className="return" onClick={returnHome}>
+          <Return  onClick={returnHome}>
             <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
-            <h3 className="text-return">{returnText}</h3>
-          </div>
+            <TextReturn >{returnText}</TextReturn>
+          </Return>
         </NavLink>
         <Routes>
           <Route

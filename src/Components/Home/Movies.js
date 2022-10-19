@@ -1,11 +1,10 @@
 import useMovies from "../hooks/useMovies";
-const Movies = ({ returnHome }) => {
-  const { movieName, containerMovies } = useMovies();
+import { ContainerMovies } from "./UI/style";
+const Movies = () => {
+  const { movieName } = useMovies();
 
   return (
-    <div className="container-movies" ref={containerMovies}>
-      {movieName}
-    </div>
+    <ContainerMovies className="container-movies">{movieName}</ContainerMovies>
   );
 };
 

@@ -1,22 +1,38 @@
 import useMovies from "../hooks/useMovies";
-
-const ChangeLanguage = ({changeLanguage}) => {
-
-  const {checkedLanguage} = useMovies();
-    return (
-    <div className="row">
-      <div className="toggle-button-cover">
-        <div className="button-cover">
-          <div className="translate" id="translate-id" onClick={changeLanguage}>
-            <input type="checkbox" className="checkbox" checked={checkedLanguage} onChange={changeLanguage}  />
-            <div className="knobs">
-              <span>EN</span>
-            </div>
-            <div className="layer"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+import {
+  CheckboxLanguage,
+  RowLanguage,
+  ToggleButtonLanguage,
+  ButtonCoverLanguage,
+  TranslateLanguage,
+  KnobsLanguage,
+  SpanLanguage,
+  LayerLanguage,
+} from "./UI/style";
+const ChangeLanguage = ({ changeLanguage }) => {
+  const { checkedLanguage } = useMovies();
+  return (
+    <RowLanguage>
+      <ToggleButtonLanguage>
+        <ButtonCoverLanguage>
+          <TranslateLanguage
+            className="translate"
+            id="translate-id"
+            onClick={changeLanguage}
+          >
+            <CheckboxLanguage
+              type="checkbox"
+              checked={checkedLanguage}
+              onChange={changeLanguage}
+            />
+            <KnobsLanguage>
+              <SpanLanguage>EN</SpanLanguage>
+            </KnobsLanguage>
+            <LayerLanguage></LayerLanguage>
+          </TranslateLanguage>
+        </ButtonCoverLanguage>
+      </ToggleButtonLanguage>
+    </RowLanguage>
   );
 };
 

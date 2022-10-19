@@ -1,9 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;800&display=swap");
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
-@import url("./Components/Home/style.css");
-@import url("./Components//Overview/style.css");
-@import url("./Components/Loader/style.css");
-
+@import url("./Components//Loader/style.css");
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -31,6 +28,12 @@ code {
   padding: 0;
   box-sizing: border-box;
 }
+
+a:-webkit-any-link {
+  text-decoration: none;
+}
+
+
 
 
 

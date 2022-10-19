@@ -1,17 +1,19 @@
 import useMovies from "../hooks/useMovies";
+import { MenuPagination, ButtonPagination } from "./UI/style";
+const Pagination = ({ changePage }) => {
+  const { pageNum, next, previous } = useMovies();
 
-const Pagination = ({changePage}) => {
+  return (
+    <MenuPagination>
+      <ButtonPagination id="previous" onClick={changePage}>
+        {previous}
+      </ButtonPagination>
+      <h2>{pageNum}</h2>
+      <ButtonPagination id="next" onClick={changePage}>
+        {next}
+      </ButtonPagination>
+    </MenuPagination>
+  );
+};
 
-   const {pageNum, next,previous} = useMovies();
-
-    return (
-     <div className="pagination">
-        <button id="previous" onClick={changePage}>{previous}</button>
-        <h2>{pageNum}</h2>
-        <button id="next" onClick={changePage}>{next}</button>
-     </div>
-    )
-  };
-  
-  export default Pagination;
-  
+export default Pagination;

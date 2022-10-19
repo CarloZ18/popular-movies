@@ -2,11 +2,25 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
 import Loader from "../Loader/Loader";
-import MovieDetails from "./MovieDetails";
 import YouTube from "react-youtube";
+import {
+  Movie,
+  MoviePoster,
+  MovieInfo,
+  MoreInfo,
+  DisplayMovies,
+  MovieCard,
+  ContainerMovies,
+} from "../Home/UI/style";
 
+import {
+  FeaturedWrapper,
+  TitleWrapper,
+  ButtonTrailer,
+  Sinopsis,
+} from "./UI/styles";
 
-const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
+const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
   const {
     loading,
     movieId,
@@ -14,6 +28,7 @@ const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
     moreInfo,
     playing,
     watchTrailer,
+    textRecommendations,
   } = useMovies();
   const [trailer, setTrailer] = useState(
     `${localStorage.getItem("TrailerKey")}`
@@ -43,7 +58,9 @@ const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
         const overviewUrl = await fetch(
           `https://api.themoviedb.org/3/movie/${
             id !== undefined ? id : movieId
-          }?api_key=${process.env.REACT_APP_API_KEY}&language=${language}&append_to_response=videos,recommendations`
+          }?api_key=${
+            process.env.REACT_APP_API_KEY
+          }&language=${language}&append_to_response=videos,recommendations`
         );
 
         if (overviewUrl.status === 200) {
@@ -55,24 +72,26 @@ const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
           );
           setRecommendations(
             renderRecommendations.map((movie) => (
-              <div className="card-recommendations" key={movie.id}>
-                <img
-                  className="poster"
-                  src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                  alt=""
-                />
-
-                <div className="info">
-                  <Link to={`/overview/${movie.id}`}>
-                    <button
-                      className="more-info"
-                      onClick={() => getData(movie.id)}
-                    >
-                      {moreInfo}
-                    </button>
-                  </Link>
-                </div>
-              </div>
+              <Movie key={movie.id}>
+                <MovieCard>
+                  {movie.poster_path !== null ? (
+                    <MoviePoster
+                      src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                      alt=""
+                    />
+                  ) : null}
+                  <MovieInfo>
+                    <Link to={`/overview/${movie.id}`}>
+                      <MoreInfo onClick={() => getData(movie.id)}>
+                        {moreInfo}
+                      </MoreInfo>
+                    </Link>
+                    {window.screen.width >= 1024 ? (
+                      <h3 className="title">{movie.title}</h3>
+                    ) : null}
+                  </MovieInfo>
+                </MovieCard>
+              </Movie>
             ))
           );
 
@@ -104,10 +123,9 @@ const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
 
           setOverviewDetails(
             <>
-
               <div className="top">
                 <div className="columns">
-                  <div className="featured_wrapper">
+                  <FeaturedWrapper>
                     <div>
                       <img
                         alt=""
@@ -116,17 +134,16 @@ const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
                       />
                     </div>
 
-                    <div className="title_wrapper">
-                      <h1 className="title-overview">{dataOverview.title}</h1>
-                      <p className="sinopsis">{dataOverview.overview}</p>
+                    <TitleWrapper>
+                      <h1>{dataOverview.title}</h1>
+                      <Sinopsis className="sinopsis">
+                        {dataOverview.overview}
+                      </Sinopsis>
 
                       {trailer !== undefined ? (
-                        <button
-                          className="button-overview"
-                          onClick={() => playTrailer()}
-                        >
+                        <ButtonTrailer onClick={() => playTrailer()}>
                           {watchTrailer}
-                        </button>
+                        </ButtonTrailer>
                       ) : null}
 
                       {playing ? (
@@ -147,8 +164,8 @@ const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
                           }}
                         />
                       ) : null}
-                    </div>
-                  </div>
+                    </TitleWrapper>
+                  </FeaturedWrapper>
                 </div>
               </div>
             </>
@@ -167,16 +184,15 @@ const Overview = ({ getData, setPlaying,setWatchTrailer}) => {
     overviewMovie();
   }, [movieId, playing, trailer, language]);
   return (
-    <div className="display-movies">
-      {loading ? (
-        <Loader />
-      ) : (
-        <MovieDetails
-          overviewDetails={overviewDetails}
-          recommendations={recommendations}
-        />
-      )}
-    </div>
+    <>
+      {overviewDetails}
+      {recommendations.length !== 0 ? (
+        <DisplayMovies>
+          <h3 className="recommendations-text">{textRecommendations}</h3>
+          <ContainerMovies>{recommendations}</ContainerMovies>
+        </DisplayMovies>
+      ) : null}
+    </>
   );
 };
 

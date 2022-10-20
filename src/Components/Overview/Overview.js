@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
-import Loader from "../Loader/Loader";
 import YouTube from "react-youtube";
 import {
   Movie,
@@ -19,10 +18,10 @@ import {
   ButtonTrailer,
   Sinopsis,
 } from "./UI/styles";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
 
 const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
   const {
-    loading,
     movieId,
     language,
     moreInfo,
@@ -74,21 +73,21 @@ const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
             renderRecommendations.map((movie) => (
               <Movie key={movie.id}>
                 <MovieCard>
-                  {movie.poster_path !== null ? (
+                  {movie.poster_path !== null && (
                     <MoviePoster
                       src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                       alt=""
                     />
-                  ) : null}
+                  )}
                   <MovieInfo>
                     <Link to={`/overview/${movie.id}`}>
                       <MoreInfo onClick={() => getData(movie.id)}>
                         {moreInfo}
                       </MoreInfo>
                     </Link>
-                    {window.screen.width >= 1024 ? (
+                    {window.screen.width >= 1024 && (
                       <h3 className="title">{movie.title}</h3>
-                    ) : null}
+                    )}
                   </MovieInfo>
                 </MovieCard>
               </Movie>
@@ -122,53 +121,61 @@ const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
           }
 
           setOverviewDetails(
-            <>
-              <div className="top">
-                <div className="columns">
-                  <FeaturedWrapper>
-                    <div>
-                      <img
-                        alt=""
-                        src={`https://image.tmdb.org/t/p/w500/${dataOverview.poster_path}`}
-                        className="featured"
-                      />
-                    </div>
-
-                    <TitleWrapper>
-                      <h1>{dataOverview.title}</h1>
-                      <Sinopsis className="sinopsis">
-                        {dataOverview.overview}
-                      </Sinopsis>
-
-                      {trailer !== undefined ? (
-                        <ButtonTrailer onClick={() => playTrailer()}>
-                          {watchTrailer}
-                        </ButtonTrailer>
-                      ) : null}
-
-                      {playing ? (
-                        <YouTube
-                          videoId={trailer}
-                          opts={{
-                            width: "100%",
-                            height: "380px",
-                            playerVars: {
-                              autoplay: 1,
-                              controls: 1,
-                              cc_load_policy: 0,
-                              fs: 1,
-                              iv_load_policy: 0,
-                              modestbranding: 0,
-                              rel: 0,
-                            },
-                          }}
+            <SwitchTransition>
+              <CSSTransition
+                key={movieId}
+                addEndListener={(node, done) =>
+                  node.addEventListener("transitionend", done, false)
+                }
+                classNames="fade"
+              >
+                <div className="top">
+                  <div className="columns">
+                    <FeaturedWrapper>
+                      <div>
+                        <img
+                          alt=""
+                          src={`https://image.tmdb.org/t/p/w500/${dataOverview.poster_path}`}
+                          className="featured"
                         />
-                      ) : null}
-                    </TitleWrapper>
-                  </FeaturedWrapper>
+                      </div>
+
+                      <TitleWrapper>
+                        <h1>{dataOverview.title}</h1>
+                        <Sinopsis className="sinopsis">
+                          {dataOverview.overview}
+                        </Sinopsis>
+
+                        {trailer !== undefined && (
+                          <ButtonTrailer onClick={() => playTrailer()}>
+                            {watchTrailer}
+                          </ButtonTrailer>
+                        )}
+
+                        {playing && (
+                          <YouTube
+                            videoId={trailer}
+                            opts={{
+                              width: "100%",
+                              height: "380px",
+                              playerVars: {
+                                autoplay: 1,
+                                controls: 1,
+                                cc_load_policy: 0,
+                                fs: 1,
+                                iv_load_policy: 0,
+                                modestbranding: 0,
+                                rel: 0,
+                              },
+                            }}
+                          />
+                        )}
+                      </TitleWrapper>
+                    </FeaturedWrapper>
+                  </div>
                 </div>
-              </div>
-            </>
+              </CSSTransition>
+            </SwitchTransition>
           );
         } else if (overviewUrl.status === 401) {
           alert("Identificador incorrecto");
@@ -179,6 +186,8 @@ const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        window.scrollTo(0, 0);
       }
     };
     overviewMovie();
@@ -186,12 +195,12 @@ const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
   return (
     <>
       {overviewDetails}
-      {recommendations.length !== 0 ? (
+      {recommendations.length !== 0 && (
         <DisplayMovies>
           <h3 className="recommendations-text">{textRecommendations}</h3>
           <ContainerMovies>{recommendations}</ContainerMovies>
         </DisplayMovies>
-      ) : null}
+      )}
     </>
   );
 };

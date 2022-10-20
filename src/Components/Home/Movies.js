@@ -1,11 +1,8 @@
-import useMovies from "../hooks/useMovies";
-import { ContainerMovies } from "./UI/style";
-const Movies = () => {
-  const { movieName } = useMovies();
 
-  return (
-    <ContainerMovies className="container-movies">{movieName}</ContainerMovies>
-  );
+import { ContainerMovies } from "./UI/style";
+
+const Movies = ({movieName}) => {
+  return <ContainerMovies>{movieName}</ContainerMovies>;
 };
 
 export default Movies;

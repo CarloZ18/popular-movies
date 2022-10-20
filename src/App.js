@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./index.css";
 import {
   BrowserRouter as Router,
@@ -19,8 +19,9 @@ import {
   MovieCard,
   MoreInfo,
   Return,
-  TextReturn
+  TextReturn,
 } from "./Components/Home/UI/style";
+import { useLocalStorage } from "./Components/hooks/useLocalStorage";
 
 function App() {
   /*MOVIES*/
@@ -28,30 +29,23 @@ function App() {
   const [textRecommendations, setTextRecommendations] =
     useState("Recommendations");
   const [page, setPage] = useState(1);
-  const [language, setLanguage] = useState(`${localStorage.getItem("lang")}`);
+  const [language, setLanguage] = useLocalStorage("language", "");
   const [titleSearch, setTitleSearch] = useState("Search your movie");
-  const [moreInfo, setMoreInfo] = useState(
-    language === "en-US" ? "More info" : "Saber más"
-  );
+  const [moreInfo, setMoreInfo] = useLocalStorage("moreInfo", "");
   const [next, setNext] = useState("Next");
   const [previous, setPrevious] = useState("Previous");
   const [checkedLanguage, setCheckedLanguage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filterMovie, setFilterMovie] = useState("");
   const [watchTrailer, setWatchTrailer] = useState(
-    language === "en-US" ? "Watch Trailer" : "Ver Trailer"
+    language === "en-US" ? "Watch railer" : "Ver trailer"
   );
-  const [trailerText, setTrailerText] = useState("Hide Trailer");
-  const [returnText, setReturnText] = useState(
-    language === "en-US" ? "Home" : "Inicio"
-  );
+  const [returnText, setReturnText] = useLocalStorage("returnText", "");
   const [playing, setPlaying] = useState(false);
-  const [movieId, setMovieId] = useState(`${localStorage.getItem("ID")}`);
-
-  const lang = localStorage.getItem("lang");
+  const [movieId, setMovieId] = useLocalStorage("ID", "");
 
   const store = {
-    pageNum: page,
+    page: page,
     movieName: movieName,
     textRecommendations: textRecommendations,
     language: language,
@@ -63,7 +57,6 @@ function App() {
     titleSearch: titleSearch,
     checkedLanguage: checkedLanguage,
     returnText: returnText,
-    trailerText: trailerText,
     playing: playing,
     movieId: movieId,
   };
@@ -79,8 +72,6 @@ function App() {
       setWatchTrailer("Ver Trailer");
       setTextRecommendations("Recomendaciones");
       setReturnText("Inicio");
-      setTrailerText("Ocultar Trailer");
-      localStorage.setItem("lang", "es-ES");
     } else {
       setLanguage("en-US");
       setTitleSearch("Search your movie");
@@ -91,27 +82,19 @@ function App() {
       setWatchTrailer("Watch Trailer");
       setTextRecommendations("Recommendations");
       setReturnText("Home");
-      setTrailerText("Hide Trailer");
-      localStorage.setItem("lang", "en-US");
     }
   };
 
   const changePage = (e) => {
     if (e.target.id === "previous" && page > 1) {
       setPage(page - 1);
-
-      window.scrollTo(0, 0);
     } else if (e.target.id === "next" && page < 1000) {
       setPage(page + 1);
-
-      window.scrollTo(0, 0);
     }
   };
 
   const getData = (id) => {
     setMovieId(id);
-    window.scrollTo(0, 0);
-    localStorage.setItem("ID", `${id}`);
   };
 
   const returnHome = () => {
@@ -135,7 +118,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (lang === "es-ES") {
+    if (language === "es-ES") {
       setLanguage("es-ES");
       setTitleSearch("Busca tu película");
       setMoreInfo("Saber más");
@@ -186,9 +169,9 @@ function App() {
                       {moreInfo}
                     </MoreInfo>
                   </Link>
-                  {window.screen.width >= 1024 ? (
+                  {window.screen.width >= 1024 && (
                     <h3 className="title">{movie.title}</h3>
-                  ) : null}
+                  )}
                 </MovieInfo>
               </MovieCard>
             </Movie>
@@ -203,21 +186,21 @@ function App() {
           );
           if (searchUrl.status === 200) {
             const data2 = await searchUrl.json();
-            console.log(data2);
+
             const renderSearch = data2.results.filter(
               (poster) => poster.poster_path !== null
             );
 
             const searchPopularMovies = renderSearch.map((movie) => (
-              <Movie  key={movie.id}>
-                <MovieCard >
+              <Movie key={movie.id}>
+                <MovieCard>
                   <MoviePoster
                     className="poster"
                     src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     alt=""
                   />
 
-                  <MovieInfo >
+                  <MovieInfo>
                     <Link to={`/overview/${movie.id}`}>
                       <MoreInfo
                         className="more-info"
@@ -256,9 +239,9 @@ function App() {
     <MoviesContext.Provider value={store}>
       <Router>
         <NavLink to="/">
-          <Return  onClick={returnHome}>
+          <Return onClick={returnHome}>
             <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
-            <TextReturn >{returnText}</TextReturn>
+            <TextReturn>{returnText}</TextReturn>
           </Return>
         </NavLink>
         <Routes>
@@ -272,6 +255,7 @@ function App() {
               />
             }
           ></Route>
+
           <Route
             path="/"
             exact

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import "./index.css";
 import {
   BrowserRouter as Router,
@@ -38,7 +38,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [filterMovie, setFilterMovie] = useState("");
   const [watchTrailer, setWatchTrailer] = useState(
-    language === "en-US" ? "Watch railer" : "Ver trailer"
+    language === "en-US" ? "Watch Trailer" : "Ver trailer"
   );
   const [returnText, setReturnText] = useLocalStorage("returnText", "");
   const [playing, setPlaying] = useState(false);

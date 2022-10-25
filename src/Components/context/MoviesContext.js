@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 const MoviesContext = createContext({
   page: 1,
-  movieName: null,
+  movieName: "",
   textRecommendations:null,
   language:null,
   moreInfo:null,

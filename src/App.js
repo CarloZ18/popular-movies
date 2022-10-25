@@ -4,7 +4,6 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Link,
   NavLink,
 } from "react-router-dom";
 import Home from "./Components/Home/Home";
@@ -12,20 +11,12 @@ import MoviesContext from "./Components/context/MoviesContext";
 import Overview from "./Components/Overview/Overview";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import {
-  Movie,
-  MoviePoster,
-  MovieInfo,
-  MovieCard,
-  MoreInfo,
-  Return,
-  TextReturn,
-} from "./Components/Home/UI/style";
 import { useLocalStorage } from "./Components/hooks/useLocalStorage";
+import styled from "styled-components";
 
 function App() {
   /*MOVIES*/
-  const [movieName, setMovieName] = useState("");
+  const [movieName, setMovieName] = useState([]);
   const [textRecommendations, setTextRecommendations] =
     useState("Recommendations");
   const [page, setPage] = useState(1);
@@ -154,30 +145,7 @@ function App() {
             (poster) => poster.poster_path !== null
           );
 
-          const moviePopular = renderMovies.map((movie) => (
-            <Movie key={movie.id}>
-              <MovieCard>
-                {movie.poster_path !== null ? (
-                  <MoviePoster
-                    src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                    alt=""
-                  />
-                ) : null}
-                <MovieInfo>
-                  <Link to={`/overview/${movie.id}`}>
-                    <MoreInfo onClick={() => getData(movie.id)}>
-                      {moreInfo}
-                    </MoreInfo>
-                  </Link>
-                  {window.screen.width >= 1024 && (
-                    <h3 className="title">{movie.title}</h3>
-                  )}
-                </MovieInfo>
-              </MovieCard>
-            </Movie>
-          ));
-
-          setMovieName(moviePopular);
+          setMovieName(renderMovies);
         } else if (moviesUrl.status === 200 && filterMovie !== "") {
           const search = filterMovie;
           setLoading(true);
@@ -190,34 +158,7 @@ function App() {
             const renderSearch = data2.results.filter(
               (poster) => poster.poster_path !== null
             );
-
-            const searchPopularMovies = renderSearch.map((movie) => (
-              <Movie key={movie.id}>
-                <MovieCard>
-                  <MoviePoster
-                    className="poster"
-                    src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                    alt=""
-                  />
-
-                  <MovieInfo>
-                    <Link to={`/overview/${movie.id}`}>
-                      <MoreInfo
-                        className="more-info"
-                        onClick={() => getData(movie.id)}
-                      >
-                        {moreInfo}
-                      </MoreInfo>
-                    </Link>
-
-                    {window.screen.width >= 1024 ? (
-                      <h3 className="title">{movie.title}</h3>
-                    ) : null}
-                  </MovieInfo>
-                </MovieCard>
-              </Movie>
-            ));
-            setMovieName(searchPopularMovies);
+            setMovieName(renderSearch);
           } else if (moviesUrl.status === 401) {
             alert("Identificador incorrecto");
           } else if (moviesUrl.status === 404) {
@@ -264,6 +205,7 @@ function App() {
                 searchMovie={searchMovie}
                 changeLanguage={changeLanguage}
                 changePage={changePage}
+                getData={getData}
               />
             }
           ></Route>
@@ -272,5 +214,20 @@ function App() {
     </MoviesContext.Provider>
   );
 }
+
+export const Return = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: var(--primary-color);
+  color: #fff;
+`;
+export const TextReturn = styled.h3`
+  margin-left: 15px;
+  font-weight: 600;
+  text-decoration: none;
+`;
+
 
 export default App;

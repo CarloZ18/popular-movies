@@ -1,13 +1,15 @@
+import { FormattedMessage } from "react-intl";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import styled from "styled-components";
-import useMovies from "../hooks/useMovies";
-const Pagination = ({ changePage }) => {
-  const { page, next, previous } = useMovies();
-
+const Pagination = ({ changePage, page }) => {
   return (
-    <MenuPagination>
-      <ButtonPagination id="previous" onClick={changePage}>
-        {previous}
+    <MenuPagination role="menu-pagination">
+      <ButtonPagination
+        role="button-previous"
+        id="previous"
+        onClick={changePage}
+      >
+        <FormattedMessage id="text-previous" defaultMessage="Previous" />
       </ButtonPagination>
       <SwitchTransition>
         <CSSTransition
@@ -20,8 +22,8 @@ const Pagination = ({ changePage }) => {
           <h2> {page} </h2>
         </CSSTransition>
       </SwitchTransition>
-      <ButtonPagination id="next" onClick={changePage}>
-        {next}
+      <ButtonPagination role="button-next" id="next" onClick={changePage}>
+        <FormattedMessage id="text-next" defaultMessage="Next" />
       </ButtonPagination>
     </MenuPagination>
   );

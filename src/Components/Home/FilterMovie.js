@@ -1,19 +1,24 @@
 import ChangeLanguage from "./ChangeLanguage";
-import useMovies from "../hooks/useMovies";
 import styled from "styled-components";
+import { FormattedMessage } from "react-intl";
 
-const FilterMovie = ({ searchMovie, changeLanguage }) => {
-  const { titleSearch } = useMovies();
-
+const FilterMovie = ({ searchMovie }) => {
+  
   return (
     <>
       <div className="searchMovies">
         <div>
-          <ChangeLanguage changeLanguage={changeLanguage} />
+          <ChangeLanguage />
         </div>
 
-        <FormSearch>
-          <InputSearch onChange={searchMovie} placeholder={titleSearch} />
+        <FormSearch onChange={searchMovie}
+        >
+          <FormattedMessage
+            id="title-search"
+            defaultMessage="Search your movie"
+          >
+            {(placeholder) => <InputSearch placeholder={placeholder} />}
+          </FormattedMessage>
         </FormSearch>
       </div>
     </>

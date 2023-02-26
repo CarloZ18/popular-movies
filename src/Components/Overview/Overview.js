@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useMovies from "../hooks/useMovies";
 import YouTube from "react-youtube";
@@ -15,35 +15,28 @@ import { DisplayMovies } from "../Home/Home";
 
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import styled from "styled-components";
+import { langContext } from "../../context/LangContext";
+import { FormattedMessage } from "react-intl";
 
-const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
-  const {
-    movieId,
-    language,
-    moreInfo,
-    playing,
-    watchTrailer,
-    textRecommendations,
-  } = useMovies();
+const Overview = ({ getData, setPlaying }) => {
+  const { movieId, playing } = useMovies();
   const [trailer, setTrailer] = useState(
     `${localStorage.getItem("TrailerKey")}`
   );
   const [overviewDetails, setOverviewDetails] = useState("");
   const [recommendations, setRecommendations] = useState("");
+  const { changeLanguageOverviewTrailer, language, watchTrailerOverview } =
+    useContext(langContext);
 
   const { id } = useParams();
 
   const playTrailer = () => {
     if (playing === false) {
       setPlaying(true);
-      language === "es-ES"
-        ? setWatchTrailer("Ocultar Trailer")
-        : setWatchTrailer("Hide Trailer");
+      changeLanguageOverviewTrailer(playing, language);
     } else {
       setPlaying(false);
-      language === "es-ES"
-        ? setWatchTrailer("Ver Trailer")
-        : setWatchTrailer("Watch Trailer");
+      changeLanguageOverviewTrailer(playing, language);
     }
   };
 
@@ -78,7 +71,10 @@ const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
                   <MovieInfo>
                     <Link to={`/overview/${movie.id}`}>
                       <MoreInfo onClick={() => getData(movie.id)}>
-                        {moreInfo}
+                        <FormattedMessage
+                          id="text-moreInfo"
+                          defaultMessage="More info"
+                        />
                       </MoreInfo>
                     </Link>
                     {window.screen.width >= 1024 && (
@@ -144,7 +140,7 @@ const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
 
                         {trailer !== undefined && (
                           <ButtonTrailer onClick={() => playTrailer()}>
-                            {watchTrailer}
+                            {watchTrailerOverview}
                           </ButtonTrailer>
                         )}
 
@@ -187,13 +183,18 @@ const Overview = ({ getData, setPlaying, setWatchTrailer }) => {
       }
     };
     overviewMovie();
-  }, [movieId, playing, trailer, language]);
+  }, [movieId, playing, trailer,language,watchTrailerOverview]);
   return (
     <>
       {overviewDetails}
       {recommendations.length !== 0 && (
         <DisplayMovies>
-          <h3 className="recommendations-text">{textRecommendations}</h3>
+          <h3 className="recommendations-text">
+            <FormattedMessage
+              id="text-recommendations"
+              defaultMessage="Recommendations"
+            />
+          </h3>
           <ContainerMovies>{recommendations}</ContainerMovies>
         </DisplayMovies>
       )}

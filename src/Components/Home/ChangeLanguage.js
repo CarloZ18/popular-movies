@@ -1,20 +1,23 @@
+import { useContext } from "react";
 import styled from "styled-components";
-import useMovies from "../hooks/useMovies";
-const ChangeLanguage = ({ changeLanguage }) => {
-  const { checkedLanguage } = useMovies();
+import { langContext } from "../../context/LangContext";
+const ChangeLanguage = ({idiom}) => {
+   idiom = useContext(langContext);
+
   return (
-    <RowLanguage>
+    <RowLanguage role="container-language">
       <ToggleButtonLanguage>
         <ButtonCoverLanguage>
           <TranslateLanguage
+            role="div-translate"
             className="translate"
             id="translate-id"
-            onClick={changeLanguage}
+            onClick={() => idiom.changeLanguage()}
           >
             <CheckboxLanguage
               type="checkbox"
-              checked={checkedLanguage}
-              onChange={changeLanguage}
+              checked={idiom.checkedLanguage}
+              onChange={() => idiom.changeLanguage()}
             />
             <KnobsLanguage>
               <SpanLanguage>EN</SpanLanguage>
@@ -161,6 +164,5 @@ export const CheckboxLanguage = styled.input`
     color: #fff;
   }
 `;
-
 
 export default ChangeLanguage;

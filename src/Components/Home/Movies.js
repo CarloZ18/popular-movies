@@ -1,12 +1,9 @@
+import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import useMovies from "../hooks/useMovies";
-
 const Movies = ({ getData, movieName }) => {
-  const { moreInfo } = useMovies();
-
   const mapMovies = movieName.map((movie) => (
-    <Movie key={movie.id}>
+    <Movie role={"movie"} key={movie.id}>
       <MovieCard>
         {movie.poster_path !== null ? (
           <MoviePoster
@@ -16,7 +13,12 @@ const Movies = ({ getData, movieName }) => {
         ) : null}
         <MovieInfo>
           <Link to={`/overview/${movie.id}`}>
-            <MoreInfo onClick={() => getData(movie.id)}>{moreInfo}</MoreInfo>
+            <MoreInfo onClick={() => getData(movie.id)}>
+              <FormattedMessage
+                id="text-watchTrailer"
+                defaultMessage="Watch Trailer"
+              />
+            </MoreInfo>
           </Link>
           {window.screen.width >= 1024 && (
             <h3 className="title">{movie.title}</h3>
@@ -25,8 +27,10 @@ const Movies = ({ getData, movieName }) => {
       </MovieCard>
     </Movie>
   ));
-
-  return <ContainerMovies>{mapMovies}</ContainerMovies>;
+console.log(mapMovies)
+  return (
+    <ContainerMovies role="container-movies">{mapMovies}</ContainerMovies>
+  );
 };
 
 export const ContainerMovies = styled.div`

@@ -1,16 +1,68 @@
-import {FilterMovie} from "./FilterMovie";
+import { FilterMovie } from "./FilterMovie";
 import Loader from "../Loader/Loader";
 import Movies from "./Movies";
-import {Pagination} from "./Pagination";
-import useMovies from "../hooks/useMovies";
+import { Pagination } from "./Pagination";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import styled from "styled-components";
+import { useContext, useEffect, useState } from "react";
+import { langContext } from "../../context/LangContext";
 
-const Home = ({ changePage, searchMovie, changeLanguage, getData }) => {
-  const { page, loading, movieName } = useMovies();
+const Home = ({ getData, page, filterMovie, searchMovie, changePage }) => {
+  const [movieName, setMovieName] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const idiom= useContext(langContext);
+
+
+  useEffect(() => {
+    const popularMovies = async () => {
+      try {
+        setLoading(true);
+        const moviesUrl = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.REACT_APP_API_KEY}&language=${idiom.language}&page=${page}&include_adult=false`
+        );
+
+        if (moviesUrl.status === 200 && filterMovie === "") {
+          const data = await moviesUrl.json();
+
+          const renderMovies = data.results.filter(
+            (poster) => poster.poster_path !== null
+          );
+
+          setMovieName(renderMovies);
+        } else if (moviesUrl.status === 200 && filterMovie !== "") {
+          console.log(1);
+          const search = filterMovie;
+          setLoading(true);
+          const searchUrl = await fetch(
+            `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_API_KEY}&page=${page}&query=${search}&include_adult=false`
+          );
+          if (searchUrl.status === 200) {
+            const data2 = await searchUrl.json();
+
+            const renderSearch = data2.results.filter(
+              (poster) => poster.poster_path !== null
+            );
+            setMovieName(renderSearch);
+          } else if (moviesUrl.status === 401) {
+            alert("Identificador incorrecto");
+          } else if (moviesUrl.status === 404) {
+            console.log("No se encuentra la pelicula");
+          } else {
+            alert("Hubo un error al obtener la pelicula");
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    popularMovies();
+  }, [idiom.language, page, filterMovie]);
+
   return (
-    <DisplayMovies>
-      <FilterMovie searchMovie={searchMovie} changeLanguage={changeLanguage} />
+    <DisplayMovies role="display-home">
+      <FilterMovie searchMovie={searchMovie} />
       <SwitchTransition>
         <CSSTransition
           key={page}
@@ -22,11 +74,11 @@ const Home = ({ changePage, searchMovie, changeLanguage, getData }) => {
           {loading ? (
             <Loader />
           ) : (
-            <Movies movieName={movieName} getData={getData} />
+            <Movies getData={getData} movieName={movieName} />
           )}
         </CSSTransition>
       </SwitchTransition>
-      <Pagination changePage={changePage} />
+      <Pagination changePage={changePage} page={page} />
     </DisplayMovies>
   );
 };

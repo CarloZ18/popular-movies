@@ -17,7 +17,7 @@
     "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.5",
     "react-youtube": "^10.1.0",
-    "styled-components": "^5.3.6",
+    "styled-components": "^5.3.7",
     "sweetalert2": "^11.4.33",
     "web-vitals": "^2.1.4"
   },

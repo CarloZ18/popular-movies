@@ -2,34 +2,34 @@ import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 const Movies = ({ getData, movieName }) => {
-  const mapMovies = movieName.map((movie) => (
-    <Movie role={"movie"} key={movie.id}>
-      <MovieCard>
-        {movie.poster_path !== null ? (
-          <MoviePoster
-            src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-            alt=""
-          />
-        ) : null}
-        <MovieInfo>
-          <Link to={`/overview/${movie.id}`}>
-            <MoreInfo onClick={() => getData(movie.id)}>
-              <FormattedMessage
-                id="text-watchTrailer"
-                defaultMessage="Watch Trailer"
-              />
-            </MoreInfo>
-          </Link>
-          {window.screen.width >= 1024 && (
-            <h3 className="title">{movie.title}</h3>
-          )}
-        </MovieInfo>
-      </MovieCard>
-    </Movie>
-  ));
-console.log(mapMovies)
   return (
-    <ContainerMovies role="container-movies">{mapMovies}</ContainerMovies>
+    <ContainerMovies role="container-movies">
+      {movieName.map((movie) => (
+        <Movie role={"movie"} key={movie.id}>
+          <MovieCard>
+            {movie.poster_path !== null ? (
+              <MoviePoster
+                src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                alt=""
+              />
+            ) : null}
+            <MovieInfo>
+              <Link to={`/overview/${movie.id}`}>
+                <MoreInfo onClick={() => getData(movie.id)}>
+                  <FormattedMessage
+                    id="text-watchTrailer"
+                    defaultMessage="Watch Trailer"
+                  />
+                </MoreInfo>
+              </Link>
+              {window.screen.width >= 1024 && (
+                <h3 className="title">{movie.title}</h3>
+              )}
+            </MovieInfo>
+          </MovieCard>
+        </Movie>
+      ))}
+    </ContainerMovies>
   );
 };
 
@@ -132,7 +132,9 @@ export const MoreInfo = styled.button`
   color: #fff;
   font-size: 1em;
   font-weight: 700;
+  list-style-type: none;
   cursor: pointer;
+
   transition: all 0.5s;
   &:hover {
     background: #12bba4;
